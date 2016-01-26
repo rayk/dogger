@@ -1,0 +1,1 @@
+/// Writes messages to the standard output console.
