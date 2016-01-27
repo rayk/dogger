@@ -8,11 +8,10 @@ import 'dart:isolate';
 import 'package:dogger/dogger.dart';
 import 'package:test/test.dart';
 
-class TestDog {}
-
 void main() {
   group('Logger Dogger', () {
-    test('Should generate message flat message', () async {
+
+    test('Should generate message flat message.', () async {
       TestDog testDog = new TestDog();
       logFunction log;
       DoggerService logService;
@@ -31,10 +30,23 @@ void main() {
       expect(logService.isExecutorRunning, isTrue);
 
       listenToPort.listen(expectAsync((Map message) {
-        print(message);
+        expect(message.keys.length, equals(10));
       }, count: 1));
 
       log(Event.Error, msg: 'Unknown');
     });
+
+    test('Should only be returning the same instance all the time.',(){
+      DoggerService logService01;
+      DoggerService logService02;
+
+      logService01 = new DoggerService(LogMode.Diagnostic);
+      logService02 = new DoggerService(LogMode.Diagnostic);
+      expect(identical(logService01, logService02), isTrue);
+    });
+
+
   });
 }
+
+class TestDog {}

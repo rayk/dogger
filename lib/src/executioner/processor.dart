@@ -1,22 +1,19 @@
-/// Processes each log message by routing it to a formatter and then an appender.
-
+/// Processor produces the a fully encapsulated entry, along with meta details.
+/// that allows the router to forward the entry to the correct appender.
 library processor;
 
+import 'dart:async';
+
 import 'package:dogger/src/config/message_types.dart';
-import 'package:lookup_map/lookup_map.dart';
+import 'package:dogger/src/executioner/appender.dart';
+import 'package:dogger/src/executioner/log_entry.dart';
+import 'package:dogger/src/executioner/logger_state.dart';
 
-const LookupMap msgTypeLookup =
-    const LookupMap(const [Event.Error, errorEventProcessor]);
-
-Event convertToEnum(int idx) {
-  List events = Event.values;
-  return events[idx];
+/// Returns a map which includes the appender and a formatted
+/// log entry. Give the current logger state and any overrides
+/// which have been included.
+Future<Map> process(Map message) async {
+  Appender appender = selectAppender(Event.values[3]);
+  return await generateLogEntry(message, appender);
 }
 
-Map errorEventProcessor(Map message) {}
-
-processMessage(Map message) {
-  Function processor;
-  processor = msgTypeLookup[convertToEnum(message[3])];
-  processor(message);
-}

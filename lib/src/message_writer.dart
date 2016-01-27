@@ -32,6 +32,7 @@ Map formMessage(List elements) {
   result[LogMessage.Expose.index] = expObj ?? '';
   result[LogMessage.Group.index] = elements[8] ?? false;
   result[LogMessage.Isolate.index] = elements[9];
+  result[LogMessage.time.index] = new DateTime.now().microsecondsSinceEpoch;
 
   return result;
 }

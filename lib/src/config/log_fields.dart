@@ -10,4 +10,5 @@ enum LogMessage{
     Expose,
     Group,
     Isolate,
+    Time
 }

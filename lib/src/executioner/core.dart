@@ -6,7 +6,8 @@ library logger.core;
 
 import 'dart:isolate';
 import 'dart:developer';
-import 'package:dogger/src/config/message_types.dart';
+import 'package:dogger/src/executioner/processor.dart';
+import 'package:dogger/src/executioner/logger_state.dart';
 
 main(List args, int message) {
   ReceivePort inBoundMessagePort = new ReceivePort();
@@ -14,6 +15,8 @@ main(List args, int message) {
   SendPort tempProvisionPort;
   String isolateID;
   String executorPath;
+
+  bool isConfigMessage(Map msg) => msg.containsKey('parameter');
 
   if (args.length == 4) {
     log('Processing Startup Args');
@@ -35,5 +38,13 @@ main(List args, int message) {
     }
   }
 
-  inBoundMessagePort.listen((Map msg) {});
+  /// Handle each incoming message
+  inBoundMessagePort.listen((Map msg) async {
+    if (isConfigMessage(msg)) {
+      LoggerState.update(msg);
+    }
+    process(msg).then((Map logEntry) {
+
+    });
+  });
 }
